@@ -19,8 +19,8 @@
 		"dev": "npm run watch",
 		"validate": "npm run lint && npm run type-check"
 	},
-	"author": "",
-	"license": "",
+	"author": "Techtonic Living LLC",
+	"license": "MIT",
 	"devDependencies": {
 		"@figma/eslint-plugin-figma-plugins": "*",
 		"@figma/plugin-typings": "*",
