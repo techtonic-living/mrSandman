@@ -282,6 +282,62 @@ return (
 // hoverStyle applies recursively to all children
 ```
 
+## Workbench Architecture & Patterns
+
+### The "Fetch & Sync" Pattern (Critical)
+
+The Widget API separates rendering (sync) from data access (async).
+
+-   **Constraint**: `figma.variables` and other Plugin APIs CANNOT be accessed in the main render body.
+-   **Pattern**: Use a "Source of Truth" model where Figma Variables are the truth, and Widget State is the cache.
+-   **Implementation**:
+    1.  **Read**: Fetch variables in `useEffect` or `onClick` handlers.
+    2.  **Store**: Save relevant data to `useSyncedState`.
+    3.  **Render**: Render UI solely based on `useSyncedState`.
+
+```tsx
+// ✅ Correct Pattern
+function ColorList() {
+  const [colors, setColors] = useSyncedState("colors", []);
+
+  useEffect(() => {
+    // Async fetch in hook
+    figma.variables.getLocalVariablesAsync().then(vars => {
+      const colorVars = vars.filter(v => v.resolvedType === "COLOR");
+      setColors(colorVars.map(v => ({ id: v.id, name: v.name })));
+    });
+  });
+
+  return <AutoLayout>{colors.map(c => <Text key={c.id}>{c.name}</Text>)}</AutoLayout>;
+}
+```
+
+### Domain-Split State Management
+
+To prevent performance issues and conflicts, split state by domain rather than using one monolithic object.
+
+-   `useSyncedState("colors", ...)` - Color tokens
+-   `useSyncedState("typography", ...)` - Type tokens
+-   `useSyncedState("sizing", ...)` - Sizing tokens
+-   `useSyncedState("activeTab", "colors")` - Navigation state
+
+### User-Specific UI State
+
+Use `useSyncedMap` for transient UI state that shouldn't affect other users (e.g., which accordion is open, scroll position).
+
+```tsx
+const uiState = useSyncedMap("uiState");
+const myState = uiState.get(figma.currentUser.sessionId) || {};
+```
+
+### Color Math & Manipulation
+
+Figma uses RGB/RGBA natively. For LCH/OKLCH operations required by the Workbench:
+
+-   Perform all color math in event handlers **before** setting state.
+-   Store values in a format ready for rendering (e.g., Hex or RGB strings) to keep the render loop fast.
+-   Ensure external libraries (e.g., `culori`) are compatible with the Figma sandbox (no DOM dependency).
+
 ## Manifest Configuration
 
 ### Critical Fields in manifest.json
