@@ -2,27 +2,39 @@
  * mrSandman Widget - Design System Foundations Workbench
  *
  * A Figma widget for managing design tokens (colors, typography, sizing).
- * Opens an iframe UI for detailed editing and syncs state via postMessage.
+ * Circular tool selector with central logo, matching Figma design.
  */
 
 const { widget } = figma;
-const { useEffect, useSyncedState, usePropertyMenu, AutoLayout, Text } = widget;
+const { useEffect, useSyncedState, usePropertyMenu, Frame, Image } = widget;
 
-import { Header, Tabs } from "./components";
+import { ToolButton, TOKENS } from "./components";
+import type { ToolType } from "./components";
 import { WorkbenchTab } from "./types";
+
+// Logo asset from Figma (expires in 7 days - should be replaced with permanent asset)
+const LOGO_URL = "https://www.figma.com/api/mcp/asset/e9c48430-1a34-403f-b206-9879101fedbf";
 
 // Message types for Widget <-> UI communication
 interface WidgetMessage {
 	type: "INIT" | "SYNC_STATE" | "UPDATE_TAB" | "CLOSE";
 	payload?: {
 		activeTab?: WorkbenchTab;
-		// Add more state fields as needed
 	};
 }
 
+// Tool positions relative to center (matching Figma layout)
+// Positions are calculated from the 350x300 canvas with tools arranged in arc
+const TOOL_POSITIONS: Record<ToolType, { x: number; y: number }> = {
+	colors: { x: 151 - 175, y: 110 - 150 }, // top-left area
+	typography: { x: 174 - 175, y: 126 - 150 }, // upper right
+	spacing: { x: 167 - 175, y: 150 - 150 }, // right side
+	settings: { x: 100 - 175, y: 156 - 150 }, // bottom left
+};
+
 function Widget() {
-	const [activeTab, setActiveTab] = useSyncedState<WorkbenchTab>("activeTab", "colors");
-	const [isUIOpen, setIsUIOpen] = useSyncedState<boolean>("isUIOpen", false);
+	const [activeTool, setActiveTool] = useSyncedState<ToolType>("activeTool", "colors");
+	const [_isUIOpen, setIsUIOpen] = useSyncedState<boolean>("isUIOpen", false);
 
 	// Property menu for quick actions
 	usePropertyMenu(
@@ -45,7 +57,7 @@ function Widget() {
 			if (event.propertyName === "openEditor") {
 				openUI();
 			} else if (event.propertyName === "resetState") {
-				setActiveTab("colors");
+				setActiveTool("colors");
 				figma.notify("Widget state reset to defaults");
 			}
 		}
@@ -57,7 +69,7 @@ function Widget() {
 			switch (msg.type) {
 				case "UPDATE_TAB":
 					if (msg.payload?.activeTab) {
-						setActiveTab(msg.payload.activeTab);
+						setActiveTool(msg.payload.activeTab as ToolType);
 					}
 					break;
 				case "CLOSE":
@@ -85,7 +97,7 @@ function Widget() {
 				const initMessage: WidgetMessage = {
 					type: "INIT",
 					payload: {
-						activeTab,
+						activeTab: activeTool as WorkbenchTab,
 					},
 				};
 				figma.ui.postMessage(initMessage);
@@ -93,112 +105,82 @@ function Widget() {
 		});
 	};
 
-	const tabs = [
-		{ id: "colors", label: "Colors" },
-		{ id: "typography", label: "Typography" },
-		{ id: "sizing", label: "Sizing" },
-		{ id: "settings", label: "Settings" },
-	];
-
-	// Handle tab change from widget UI
-	const handleTabChange = (id: string) => {
-		setActiveTab(id as WorkbenchTab);
-		// If UI is open, sync the tab change
-		if (isUIOpen) {
-			const syncMessage: WidgetMessage = {
-				type: "SYNC_STATE",
-				payload: { activeTab: id as WorkbenchTab },
-			};
-			figma.ui.postMessage(syncMessage);
-		}
+	// Handle tool button click
+	const handleToolClick = (tool: ToolType) => {
+		setActiveTool(tool);
+		openUI();
 	};
 
 	return (
-		<AutoLayout
-			direction="vertical"
-			spacing={16}
-			padding={24}
-			width={600}
-			fill="#FFFFFF"
-			cornerRadius={16}
-			stroke="#E6E6E6"
-			effect={{
-				type: "drop-shadow",
-				color: { r: 0, g: 0, b: 0, a: 0.1 },
-				offset: { x: 0, y: 4 },
-				blur: 12,
-			}}
-		>
-			<Header
-				title="Sandman Foundations"
-				subtitle="Manage your design system tokens directly in Figma."
-			/>
-
-			<Tabs activeTab={activeTab} onTabChange={handleTabChange} tabs={tabs} />
-
-			{/* Content area - clicking opens the full editor */}
-			<AutoLayout
-				direction="vertical"
-				spacing={16}
-				width="fill-parent"
-				padding={16}
-				fill="#FAFAFA"
-				cornerRadius={8}
-				height={400}
+		<Frame width={350} height={300} fill="#F5F5F5">
+			{/* Central Logo - clickable to open editor */}
+			<Frame
+				x={175 - TOKENS.logoSize / 2}
+				y={150 - TOKENS.logoSize / 2 + 28}
+				width={TOKENS.logoSize}
+				height={TOKENS.logoSize}
+				cornerRadius={999}
 				onClick={openUI}
-				hoverStyle={{ fill: "#F0F0F0" }}
 			>
-				<AutoLayout
-					direction="vertical"
-					spacing={8}
-					width="fill-parent"
-					height="fill-parent"
-					horizontalAlignItems="center"
-					verticalAlignItems="center"
-				>
-					{activeTab === "colors" && (
-						<>
-							<Text fontSize={20} fill="#333333" fontWeight={600}>
-								🎨 Color Management
-							</Text>
-							<Text fontSize={14} fill="#666666">
-								Click to open the editor
-							</Text>
-						</>
-					)}
-					{activeTab === "typography" && (
-						<>
-							<Text fontSize={20} fill="#333333" fontWeight={600}>
-								📝 Typography System
-							</Text>
-							<Text fontSize={14} fill="#666666">
-								Click to open the editor
-							</Text>
-						</>
-					)}
-					{activeTab === "sizing" && (
-						<>
-							<Text fontSize={20} fill="#333333" fontWeight={600}>
-								📐 Sizing & Spacing
-							</Text>
-							<Text fontSize={14} fill="#666666">
-								Click to open the editor
-							</Text>
-						</>
-					)}
-					{activeTab === "settings" && (
-						<>
-							<Text fontSize={20} fill="#333333" fontWeight={600}>
-								⚙️ Widget Settings
-							</Text>
-							<Text fontSize={14} fill="#666666">
-								Click to open the editor
-							</Text>
-						</>
-					)}
-				</AutoLayout>
-			</AutoLayout>
-		</AutoLayout>
+				<Image src={LOGO_URL} width={TOKENS.logoSize} height={TOKENS.logoSize} cornerRadius={999} />
+			</Frame>
+
+			{/* Colors tool button - top left area */}
+			<Frame
+				x={175 + TOOL_POSITIONS.colors.x - TOKENS.buttonSize / 2}
+				y={150 + TOOL_POSITIONS.colors.y - TOKENS.buttonSize / 2}
+				width={TOKENS.buttonSize}
+				height={TOKENS.buttonSize}
+			>
+				<ToolButton
+					tool="colors"
+					isActive={activeTool === "colors"}
+					onClick={() => handleToolClick("colors")}
+				/>
+			</Frame>
+
+			{/* Typography tool button - upper right */}
+			<Frame
+				x={175 + TOOL_POSITIONS.typography.x - TOKENS.buttonSize / 2}
+				y={150 + TOOL_POSITIONS.typography.y - TOKENS.buttonSize / 2}
+				width={TOKENS.buttonSize}
+				height={TOKENS.buttonSize}
+			>
+				<ToolButton
+					tool="typography"
+					isActive={activeTool === "typography"}
+					onClick={() => handleToolClick("typography")}
+				/>
+			</Frame>
+
+			{/* Spacing tool button - right side */}
+			<Frame
+				x={175 + TOOL_POSITIONS.spacing.x - TOKENS.buttonSize / 2}
+				y={150 + TOOL_POSITIONS.spacing.y - TOKENS.buttonSize / 2}
+				width={TOKENS.buttonSize}
+				height={TOKENS.buttonSize}
+			>
+				<ToolButton
+					tool="spacing"
+					isActive={activeTool === "spacing"}
+					onClick={() => handleToolClick("spacing")}
+				/>
+			</Frame>
+
+			{/* Settings tool button - bottom left */}
+			<Frame
+				x={175 + TOOL_POSITIONS.settings.x - TOKENS.buttonSize / 2}
+				y={150 + TOOL_POSITIONS.settings.y - TOKENS.buttonSize / 2}
+				width={TOKENS.buttonSize}
+				height={TOKENS.buttonSize}
+			>
+				<ToolButton
+					tool="settings"
+					isActive={activeTool === "settings"}
+					onClick={() => handleToolClick("settings")}
+				/>
+			</Frame>
+		</Frame>
 	);
 }
 
