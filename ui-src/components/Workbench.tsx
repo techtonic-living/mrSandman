@@ -8,7 +8,7 @@ function MobileLayoutIcon() {
 			<svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 48 48">
 				<g filter="url(#filter0_d_1_115)" id="mobile_layout">
 					<mask
-						className="mask-type-alpha"
+						className="[mask-type:alpha]"
 						height="48"
 						id="mask0_1_115"
 						maskUnits="userSpaceOnUse"
@@ -82,7 +82,7 @@ function TypographyIcon() {
 			<svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 48 48">
 				<g filter="url(#filter0_d_1_105)" id="brand_family">
 					<mask
-						className="mask-type-alpha"
+						className="[mask-type:alpha]"
 						height="48"
 						id="mask0_1_105"
 						maskUnits="userSpaceOnUse"
@@ -158,7 +158,7 @@ function PaletteIcon() {
 			<svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 48 48">
 				<g filter="url(#filter0_d_1_111)" id="palette">
 					<mask
-						className="mask-type-alpha"
+						className="[mask-type:alpha]"
 						height="48"
 						id="mask0_1_111"
 						maskUnits="userSpaceOnUse"
@@ -232,7 +232,7 @@ function SettingsIcon() {
 			<svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 48 48">
 				<g filter="url(#filter0_d_1_101)" id="settings">
 					<mask
-						className="mask-type-alpha"
+						className="[mask-type:alpha]"
 						height="48"
 						id="mask0_1_101"
 						maskUnits="userSpaceOnUse"
