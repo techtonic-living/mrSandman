@@ -1,0 +1,68 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "watch",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"label": "npm: watch",
+			"detail": "Auto-rebuild on file changes (recommended for development)",
+			"isBackground": true
+		},
+		{
+			"type": "npm",
+			"script": "build",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build",
+			"detail": "One-time build"
+		},
+		{
+			"type": "npm",
+			"script": "build:prod",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "npm: build:prod",
+			"detail": "Production build with validation"
+		},
+		{
+			"type": "npm",
+			"script": "lint",
+			"problemMatcher": ["$eslint-stylish"],
+			"label": "npm: lint",
+			"detail": "Check for linting errors"
+		},
+		{
+			"type": "npm",
+			"script": "lint:fix",
+			"problemMatcher": ["$eslint-stylish"],
+			"label": "npm: lint:fix",
+			"detail": "Auto-fix linting issues"
+		},
+		{
+			"type": "npm",
+			"script": "tsc",
+			"problemMatcher": ["$tsc"],
+			"label": "npm: tsc",
+			"detail": "Type check without building"
+		},
+		{
+			"type": "npm",
+			"script": "format",
+			"problemMatcher": [],
+			"label": "npm: format",
+			"detail": "Format code with Prettier"
+		},
+		{
+			"type": "npm",
+			"script": "validate",
+			"problemMatcher": ["$eslint-stylish", "$tsc"],
+			"label": "npm: validate",
+			"detail": "Run all checks (lint + type-check)"
+		}
+	]
+}

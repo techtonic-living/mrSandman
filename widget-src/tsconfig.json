@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"forceConsistentCasingInFileNames": true,
+		"jsx": "react",
+		"jsxFactory": "figma.widget.h",
+		"jsxFragmentFactory": "figma.widget.Fragment",
+		"target": "es2016",
+		"lib": ["es2016", "dom"],
+		"skipLibCheck": true,
+		"strict": true,
+
+		"typeRoots": ["../node_modules/@types", "../node_modules/@figma"]
+	},
+	"include": ["**/*.ts", "**/*.tsx"]
+}

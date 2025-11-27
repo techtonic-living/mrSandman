@@ -1,0 +1,10 @@
+{
+	"recommendations": [
+		"esbenp.prettier-vscode",
+		"dbaeumer.vscode-eslint",
+		"figma.figma-vscode-extension",
+		"github.copilot",
+		"yoavbls.pretty-ts-errors",
+		"streetsidesoftware.code-spell-checker"
+	]
+}

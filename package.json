@@ -1,0 +1,57 @@
+{
+	"name": "mrsandman",
+	"version": "1.0.0",
+	"description": "mrSandman - A custom Figma widget for enhanced collaboration",
+	"scripts": {
+		"build": "esbuild widget-src/code.tsx --bundle --outfile=dist/code.js --target=es6",
+		"build:prod": "npm run lint && npm run tsc && npm run build",
+		"watch": "npm run build -- --watch",
+		"lint": "eslint --ext .ts,.tsx --ignore-pattern node_modules .",
+		"lint:fix": "eslint --ext .ts,.tsx --ignore-pattern node_modules --fix .",
+		"tsc": "tsc --noEmit -p widget-src",
+		"tsc:watch": "tsc --noEmit -p widget-src --watch",
+		"type-check": "npm run tsc",
+		"test": "echo 'Run widget in Figma to test' && exit 0",
+		"format": "prettier --write 'widget-src/**/*.{ts,tsx}' '*.md'",
+		"format:check": "prettier --check 'widget-src/**/*.{ts,tsx}' '*.md'",
+		"clean": "rm -rf dist && mkdir -p dist",
+		"prebuild": "npm run clean",
+		"dev": "npm run watch",
+		"validate": "npm run lint && npm run type-check"
+	},
+	"author": "",
+	"license": "",
+	"devDependencies": {
+		"@figma/eslint-plugin-figma-plugins": "*",
+		"@figma/plugin-typings": "*",
+		"@figma/widget-typings": "*",
+		"@typescript-eslint/eslint-plugin": "^6.12.0",
+		"@typescript-eslint/parser": "^6.12.0",
+		"esbuild": "*",
+		"eslint": "^8.54.0",
+		"prettier": "^3.6.2",
+		"typescript": "^5.3.2"
+	},
+	"eslintConfig": {
+		"extends": [
+			"eslint:recommended",
+			"plugin:@typescript-eslint/recommended",
+			"plugin:@figma/figma-plugins/recommended"
+		],
+		"parser": "@typescript-eslint/parser",
+		"parserOptions": {
+			"project": "./widget-src/tsconfig.json"
+		},
+		"root": true,
+		"rules": {
+			"@typescript-eslint/no-unused-vars": [
+				"error",
+				{
+					"argsIgnorePattern": "^_",
+					"varsIgnorePattern": "^_",
+					"caughtErrorsIgnorePattern": "^_"
+				}
+			]
+		}
+	}
+}

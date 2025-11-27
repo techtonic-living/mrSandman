@@ -1,0 +1,2 @@
+# Ignore deprecated duplicate file causing tsconfig project mismatch
+widget-src/components/index.tsx
