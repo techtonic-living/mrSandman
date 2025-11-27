@@ -51,11 +51,15 @@ export interface HeaderProps {
 	subtitle?: string;
 }
 
-export interface ButtonProps {
+/**
+ * Workbench Navigation
+ */
+export type WorkbenchTab = "colors" | "typography" | "sizing" | "settings";
+
+export interface TabItem {
+	id: WorkbenchTab;
 	label: string;
-	onClick: () => void;
-	variant?: "primary" | "secondary";
-	disabled?: boolean;
+	icon?: string;
 }
 
 /**

@@ -39,5 +39,10 @@
 	// TypeScript React settings
 	"[typescriptreact]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"chat.mcp.serverSampling": {
+		"mrSandman/.vscode/mcp.json: com.figma.mcp/mcp": {
+			"allowedModels": ["copilot/claude-sonnet-4.5", "copilot/gemini-3-pro-preview"]
+		}
 	}
 }

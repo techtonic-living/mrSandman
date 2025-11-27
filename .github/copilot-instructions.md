@@ -8,16 +8,16 @@ This is a **Figma widget** (not a plugin) that renders interactive UI components
 
 **Critical distinctions**:
 
--   **Widgets**: Collaborative, on-canvas objects visible to everyone; unlimited instances can run simultaneously
--   **Plugins**: Single-user tools with off-canvas UI; only one per user at a time
--   This project is widget-only but can optionally use Plugin API via `figma.*` for advanced features
+- **Widgets**: Collaborative, on-canvas objects visible to everyone; unlimited instances can run simultaneously
+- **Plugins**: Single-user tools with off-canvas UI; only one per user at a time
+- This project is widget-only but can optionally use Plugin API via `figma.*` for advanced features
 
 ### Key Architecture
 
--   **Widget Code**: `widget-src/code.tsx` - Main widget logic using React-like JSX
--   **UI Iframe**: `ui.html` - Optional modal UI that opens on click
--   **Build Output**: `dist/code.js` - Bundled JavaScript from TypeScript source
--   **Manifest**: `manifest.json` - Widget configuration and permissions
+- **Widget Code**: `widget-src/code.tsx` - Main widget logic using React-like JSX
+- **UI Iframe**: `ui.html` - Optional modal UI that opens on click
+- **Build Output**: `dist/code.js` - Bundled JavaScript from TypeScript source
+- **Manifest**: `manifest.json` - Widget configuration and permissions
 
 ## Critical Build & Development Workflow
 
@@ -85,10 +85,10 @@ votes.set(figma.currentUser.sessionId, userVote); // Each user has own value
 
 **Undo/Redo Behavior**:
 
--   Each user has their own undo/redo stack
--   Tracks changes to `useSyncedState` and `useSyncedMap` automatically
--   Use `useSyncedMap` for user-specific actions to prevent users from undoing each other
--   Use `figma.commitUndo()` to add Plugin API changes to undo stack
+- Each user has their own undo/redo stack
+- Tracks changes to `useSyncedState` and `useSyncedMap` automatically
+- Use `useSyncedMap` for user-specific actions to prevent users from undoing each other
+- Use `figma.commitUndo()` to add Plugin API changes to undo stack
 
 ```tsx
 // Multi-user counter - correct approach with useSyncedMap
@@ -128,9 +128,9 @@ onClick={async () => {
 
 **Execution Model**:
 
--   **Rendering code** runs synchronously and must only depend on widget state
--   **State updating code** runs asynchronously and can access Plugin API, make network requests
--   Widgets only run on the client that initiated interaction; others see updates via Multiplayer
+- **Rendering code** runs synchronously and must only depend on widget state
+- **State updating code** runs asynchronously and can access Plugin API, make network requests
+- Widgets only run on the client that initiated interaction; others see updates via Multiplayer
 
 **Event Handlers** - Use async or return Promise to keep widget running:
 
@@ -288,27 +288,33 @@ return (
 
 The Widget API separates rendering (sync) from data access (async).
 
--   **Constraint**: `figma.variables` and other Plugin APIs CANNOT be accessed in the main render body.
--   **Pattern**: Use a "Source of Truth" model where Figma Variables are the truth, and Widget State is the cache.
--   **Implementation**:
-    1.  **Read**: Fetch variables in `useEffect` or `onClick` handlers.
-    2.  **Store**: Save relevant data to `useSyncedState`.
-    3.  **Render**: Render UI solely based on `useSyncedState`.
+- **Constraint**: `figma.variables` and other Plugin APIs CANNOT be accessed in the main render body.
+- **Pattern**: Use a "Source of Truth" model where Figma Variables are the truth, and Widget State is the cache.
+- **Implementation**:
+  1.  **Read**: Fetch variables in `useEffect` or `onClick` handlers.
+  2.  **Store**: Save relevant data to `useSyncedState`.
+  3.  **Render**: Render UI solely based on `useSyncedState`.
 
 ```tsx
 // ✅ Correct Pattern
 function ColorList() {
-  const [colors, setColors] = useSyncedState("colors", []);
+	const [colors, setColors] = useSyncedState("colors", []);
 
-  useEffect(() => {
-    // Async fetch in hook
-    figma.variables.getLocalVariablesAsync().then(vars => {
-      const colorVars = vars.filter(v => v.resolvedType === "COLOR");
-      setColors(colorVars.map(v => ({ id: v.id, name: v.name })));
-    });
-  });
+	useEffect(() => {
+		// Async fetch in hook
+		figma.variables.getLocalVariablesAsync().then((vars) => {
+			const colorVars = vars.filter((v) => v.resolvedType === "COLOR");
+			setColors(colorVars.map((v) => ({ id: v.id, name: v.name })));
+		});
+	});
 
-  return <AutoLayout>{colors.map(c => <Text key={c.id}>{c.name}</Text>)}</AutoLayout>;
+	return (
+		<AutoLayout>
+			{colors.map((c) => (
+				<Text key={c.id}>{c.name}</Text>
+			))}
+		</AutoLayout>
+	);
 }
 ```
 
@@ -316,10 +322,10 @@ function ColorList() {
 
 To prevent performance issues and conflicts, split state by domain rather than using one monolithic object.
 
--   `useSyncedState("colors", ...)` - Color tokens
--   `useSyncedState("typography", ...)` - Type tokens
--   `useSyncedState("sizing", ...)` - Sizing tokens
--   `useSyncedState("activeTab", "colors")` - Navigation state
+- `useSyncedState("colors", ...)` - Color tokens
+- `useSyncedState("typography", ...)` - Type tokens
+- `useSyncedState("sizing", ...)` - Sizing tokens
+- `useSyncedState("activeTab", "colors")` - Navigation state
 
 ### User-Specific UI State
 
@@ -334,9 +340,9 @@ const myState = uiState.get(figma.currentUser.sessionId) || {};
 
 Figma uses RGB/RGBA natively. For LCH/OKLCH operations required by the Workbench:
 
--   Perform all color math in event handlers **before** setting state.
--   Store values in a format ready for rendering (e.g., Hex or RGB strings) to keep the render loop fast.
--   Ensure external libraries (e.g., `culori`) are compatible with the Figma sandbox (no DOM dependency).
+- Perform all color math in event handlers **before** setting state.
+- Store values in a format ready for rendering (e.g., Hex or RGB strings) to keep the render loop fast.
+- Ensure external libraries (e.g., `culori`) are compatible with the Figma sandbox (no DOM dependency).
 
 ## Manifest Configuration
 
@@ -363,10 +369,10 @@ Figma uses RGB/RGBA natively. For LCH/OKLCH operations required by the Workbench
 
 **Domain Patterns**:
 
--   `["none"]` - Block all network access (default for widgets without external requests)
--   `["domain.com"]` - Allow entire domain
--   `["domain.com/endpoint"]` - Allow specific endpoint (more secure)
--   `["*"]` - Allow all domains (requires `reasoning` explanation)
+- `["none"]` - Block all network access (default for widgets without external requests)
+- `["domain.com"]` - Allow entire domain
+- `["domain.com/endpoint"]` - Allow specific endpoint (more secure)
+- `["*"]` - Allow all domains (requires `reasoning` explanation)
 
 **Best Practice**: Use most restrictive access needed. Prefer endpoint-specific over domain-level access.
 
@@ -378,25 +384,25 @@ Figma uses RGB/RGBA natively. For LCH/OKLCH operations required by the Workbench
 
 **Avoid expensive operations**:
 
--   Blurs and shadows - Use sparingly, consider rasterizing complex effects as images
--   Blend modes - Use `normal` or `passthrough` only (others are slow)
--   Complex SVG - Keep SVGs simple or use rasterized images
--   Always use `"documentAccess": "dynamic-page"` in manifest to prevent 20-30s load delays
+- Blurs and shadows - Use sparingly, consider rasterizing complex effects as images
+- Blend modes - Use `normal` or `passthrough` only (others are slow)
+- Complex SVG - Keep SVGs simple or use rasterized images
+- Always use `"documentAccess": "dynamic-page"` in manifest to prevent 20-30s load delays
 
 ### Design
 
 **On-canvas interactions**:
 
--   Keep primary actions on canvas, not in iframes
--   Avoid making entire widget clickable - reserve non-clickable areas for selection
--   Position iframes near widget using `position` property
+- Keep primary actions on canvas, not in iframes
+- Avoid making entire widget clickable - reserve non-clickable areas for selection
+- Position iframes near widget using `position` property
 
 **Property menu**:
 
--   Keep simple with 2-4 actions max
--   Don't duplicate canvas actions in property menu
--   Use icons (40x40) with tooltips, not text buttons
--   Put complex settings in iframe, not property menu
+- Keep simple with 2-4 actions max
+- Don't duplicate canvas actions in property menu
+- Use icons (40x40) with tooltips, not text buttons
+- Put complex settings in iframe, not property menu
 
 ```tsx
 // ✅ Good - Simple property menu
@@ -469,9 +475,7 @@ const { _unusedProp, usedProp } = someObject; // No error for _unusedProp
 ### Opening Modal UI
 
 ```tsx
-<Text onClick={() => new Promise(() => figma.showUI(__html__))}>
-	Open IFrame
-</Text>
+<Text onClick={() => new Promise(() => figma.showUI(__html__))}>Open IFrame</Text>
 ```
 
 ### Closing Widget/Iframe
@@ -505,9 +509,9 @@ figma.notify("Message text");
 
 **Requirements**:
 
--   Must use async handler or return Promise
--   API must support CORS with `Access-Control-Allow-Origin: *`
--   Domain must be in `manifest.json` `networkAccess.allowedDomains`
+- Must use async handler or return Promise
+- API must support CORS with `Access-Control-Allow-Origin: *`
+- Domain must be in `manifest.json` `networkAccess.allowedDomains`
 
 ## Testing in Figma
 
@@ -522,8 +526,8 @@ figma.notify("Message text");
 
 ## Documentation Reference
 
--   Widget API docs available at `/docs/devdocs/figma/widget-api/introduction.md`
--   Official docs: https://www.figma.com/widget-docs/
+- Widget API docs available at `/docs/devdocs/figma/widget-api/introduction.md`
+- Official docs: https://www.figma.com/widget-docs/
 
 ## Documentation Workflow
 
@@ -538,9 +542,9 @@ Use the `.github/prompts/add-devdoc.prompt.md` workflow to create new documentat
 
 **Template Structure**: All reference docs follow the same format:
 
--   Header with title and date
--   Table of contents with anchor links
--   Overview → Detailed sections → Examples → Resources → Next steps
--   Code examples with language tags
--   Important callouts with ⚠️ format
--   Community links and feedback footer
+- Header with title and date
+- Table of contents with anchor links
+- Overview → Detailed sections → Examples → Resources → Next steps
+- Code examples with language tags
+- Important callouts with ⚠️ format
+- Community links and feedback footer

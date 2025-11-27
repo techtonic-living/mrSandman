@@ -45,3 +45,47 @@ export function Button({
 		</AutoLayout>
 	);
 }
+
+export function Tabs({
+	activeTab,
+	onTabChange,
+	tabs,
+}: {
+	activeTab: string;
+	onTabChange: (tabId: string) => void;
+	tabs: { id: string; label: string }[];
+}) {
+	return (
+		<AutoLayout
+			direction="horizontal"
+			spacing={0}
+			width="fill-parent"
+			stroke="#E6E6E6"
+			strokeWidth={1}
+			cornerRadius={8}
+			fill="#F5F5F5"
+		>
+			{tabs.map((tab) => (
+				<AutoLayout
+					key={tab.id}
+					padding={{ horizontal: 16, vertical: 12 }}
+					fill={activeTab === tab.id ? "#FFFFFF" : "transparent"}
+					onClick={() => onTabChange(tab.id)}
+					width="fill-parent"
+					horizontalAlignItems="center"
+					stroke={activeTab === tab.id ? "#E6E6E6" : undefined}
+					// Note: strokeWidth as object (per-side) might not be supported in current typings
+					strokeWidth={activeTab === tab.id ? 1 : 0}
+				>
+					<Text
+						fontSize={14}
+						fontWeight={activeTab === tab.id ? 600 : 400}
+						fill={activeTab === tab.id ? "#333333" : "#666666"}
+					>
+						{tab.label}
+					</Text>
+				</AutoLayout>
+			))}
+		</AutoLayout>
+	);
+}

@@ -9,7 +9,8 @@
 		"skipLibCheck": true,
 		"strict": true,
 
-		"typeRoots": ["../node_modules/@types", "../node_modules/@figma"]
+		"typeRoots": ["../node_modules/@types", "../node_modules/@figma"],
+		"moduleResolution": "node"
 	},
 	"include": ["**/*.ts", "**/*.tsx"]
 }
