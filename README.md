@@ -23,22 +23,24 @@
 
 ## 🎯 Overview
 
-mrSandman is a custom Figma widget designed to enhance collaboration and workflow efficiency. This widget leverages Figma's Widget API to provide interactive, multiplayer experiences directly on the canvas.
+mrSandman is a **Figma widget for design system token management**. It provides a visual workbench for creating, editing, and organizing design primitives across three core domains: **Colors**, **Typography**, and **Sizing**.
 
 ### Key Characteristics
 
-- **Collaborative** - Real-time multiplayer interactions
+- **Token-Centric** - Structured approach to design primitives and semantic mapping
+- **Visual Editing** - Interactive editors for colors, type scales, and spacing systems
+- **Variable Integration** - Direct binding to Figma variables for design-to-code workflows
+- **Collaborative** - Real-time multiplayer token library management
 - **Type-Safe** - Built with TypeScript for reliability
-- **Performant** - Optimized for smooth canvas rendering
-- **Well-Documented** - Comprehensive API reference included
+- **Well-Documented** - Comprehensive API and pattern reference included
 
 ---
 
 ## ✨ Features
 
-- [ ] Feature 1 (Coming soon)
-- [ ] Feature 2 (Coming soon)
-- [ ] Feature 3 (Coming soon)
+- [ ] **Color Management** - Primitives, LCH ramps, semantic tokens, WCAG contrast validation
+- [ ] **Typography System** - Font families, type scales, text styles, semantic mapping
+- [ ] **Sizing & Spacing** - Spacing scales, dimensions, radii, stroke widths
 
 ---
 

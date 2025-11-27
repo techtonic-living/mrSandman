@@ -1,12 +1,12 @@
 # mrSandman Widget - Roadmap
 
-> Strategic plan for mrSandman widget development
+> Strategic plan for Sandman Design System Foundations Workbench
 
 ---
 
 ## Vision
 
-Create a powerful, intuitive Figma widget that enhances collaboration and productivity for design teams.
+Create a powerful, intuitive Figma widget for managing design system tokens. Provide designers with a visual workbench to define, organize, and maintain color primitives, typography scales, and sizing systems with direct Figma variable integration.
 
 ---
 
@@ -33,35 +33,54 @@ Create a powerful, intuitive Figma widget that enhances collaboration and produc
 
 ### Phase 2: Core Features (Week 3-4)
 
-**Goal**: Implement primary widget functionality
+**Goal**: Implement Color and Typography token management
 
-- [ ] Feature 1 implementation
-- [ ] Feature 2 implementation
-- [ ] Feature 3 implementation
+- [ ] Color Management System
+  - [ ] Color primitive editor (HEX/LCH input)
+  - [ ] Ramp generator with LCH interpolation
+  - [ ] Semantic token mapper
+  - [ ] WCAG contrast checker
+  - [ ] Variable binding integration
+- [ ] Typography System
+  - [ ] Font family manager
+  - [ ] Type scale generator
+  - [ ] Text style editor
+  - [ ] Semantic type mapping
+  - [ ] Preview rendering
 - [ ] Error handling
-- [ ] User feedback mechanisms
+- [ ] User feedback mechanisms (notifications, validation)
 
 **Success Criteria**:
 
-- All core features functional
+- Color and type token systems fully functional
+- Users can create, edit, and bind variables successfully
+- WCAG contrast validation accurate
 - Error states handled gracefully
 - Works reliably with multiple users
-- Performance meets targets (<100ms interactions)
+- Performance meets targets (<100ms for UI interactions, <500ms for calculations)
 
 ---
 
-### Phase 3: Polish & Optimization (Week 5-6)
+### Phase 3: Sizing System & Polish (Week 5-6)
 
-**Goal**: Refine user experience and performance
+**Goal**: Complete token trifecta and refine UX
 
+- [ ] Sizing & Spacing System
+  - [ ] Spacing scale generator
+  - [ ] Dimension editor (component heights/widths)
+  - [ ] Radius primitives
+  - [ ] Stroke width primitives
+  - [ ] Visual preview rulers
+- [ ] Export/import token JSON
 - [ ] UI/UX improvements
 - [ ] Performance optimization
 - [ ] Accessibility enhancements
-- [ ] Advanced features
 - [ ] Edge case handling
 
 **Success Criteria**:
 
+- All three token domains (color, type, sizing) complete
+- Token export/import works reliably
 - Smooth animations and transitions
 - Optimized for low-powered devices
 - Comprehensive error handling
@@ -130,11 +149,12 @@ Create a powerful, intuitive Figma widget that enhances collaboration and produc
 
 ### Post-Launch Features
 
-- Integration with external tools
-- Advanced customization options
-- Analytics and insights
-- Template library
-- Export/import functionality
+- Token build tool integration (Style Dictionary, Theo)
+- Theme preset packages (Material, Tailwind-inspired)
+- Advanced color science (APCA contrast, color blindness simulation)
+- Animation/motion token management
+- Token version history and diffing
+- Usage analytics (which tokens are applied where)
 
 ### Technical Improvements
 
@@ -142,7 +162,7 @@ Create a powerful, intuitive Figma widget that enhances collaboration and produc
 - Automated testing
 - CI/CD pipeline
 - Error tracking
-- Usage analytics
+- Token validation linting
 
 ---
 
@@ -150,21 +170,24 @@ Create a powerful, intuitive Figma widget that enhances collaboration and produc
 
 ### User Engagement
 
-- Daily active users
-- Time spent using widget
-- Feature adoption rate
-- User retention
+- Design teams actively managing tokens in widget
+- Token library size growth (primitives, ramps, semantic mappings)
+- Variable binding adoption rate
+- User retention week-over-week
 
 ### Technical Performance
 
-- Load time < 1 second
-- Interaction latency < 100ms
-- Crash rate < 0.1%
+- Widget load time < 1 second
+- UI interaction latency < 100ms
+- Color calculation time < 500ms
 - Type coverage > 95%
+- Crash rate < 0.1%
 
 ### Quality
 
 - User satisfaction > 4.5/5
+- Token accuracy (no manual correction needed)
+- WCAG contrast validation accuracy 100%
 - Bug reports < 5/month
 - Support tickets < 2/week
 - Code coverage > 80%
@@ -173,13 +196,14 @@ Create a powerful, intuitive Figma widget that enhances collaboration and produc
 
 ## Risk Management
 
-| Risk                         | Impact | Mitigation                                |
-| ---------------------------- | ------ | ----------------------------------------- |
-| Performance issues on canvas | High   | Early performance testing, optimization   |
-| Multi-user state conflicts   | High   | Robust state management with useSyncedMap |
-| API limitations              | Medium | Research API capabilities thoroughly      |
-| User adoption                | Medium | Focus on UX, gather early feedback        |
-| Scope creep                  | Medium | Strict feature prioritization             |
+| Risk                              | Impact | Mitigation                                           |
+| --------------------------------- | ------ | ---------------------------------------------------- |
+| LCH color calculation performance | High   | Optimize algorithms, cache computed ramps            |
+| Variable binding API limitations  | High   | Research Plugin API thoroughly, test edge cases      |
+| Multi-user token conflicts        | Medium | Use useSyncedState for shared tokens appropriately   |
+| Complex UI overwhelming users     | Medium | Progressive disclosure, clear navigation, onboarding |
+| Token taxonomy inconsistency      | Medium | Follow established patterns from foundations spec    |
+| Scope creep                       | Medium | Strict feature prioritization, Phase-gate releases   |
 
 ---
 

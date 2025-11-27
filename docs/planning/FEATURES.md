@@ -1,113 +1,119 @@
 # mrSandman Widget - Features
 
-> Comprehensive feature list and specifications
+> Sandman Design System Foundations Workbench — Comprehensive feature list and specifications
 
 ---
 
 ## Core Features
 
-### 1. Collaborative Task Cards
+### 1. Color Management System
 
 **Status**: 🟡 Planning
 **Priority**: High
 **Target**: Phase 2
 
 **Description**:
-Interactive task cards placed directly on the canvas allowing designers to add, assign, and update tasks. Each user can set their own status/comment without overwriting others. Aggregated view shows overall progress.
+Complete color token management with three layers: primitives (atomic HEX/LCH values), ramps (050-950 tonal scales via LCH interpolation), and semantic tokens (functional UI roles like background.default, text.primary). Includes visual editors, WCAG contrast checking, and Figma variable binding.
 
 **User Story**:
 
-> As a designer collaborating in Figma, I want lightweight task cards on the canvas so that I can track work items without leaving the design context.
+> As a design systems designer, I want a visual interface for creating and managing color primitives, generating consistent tonal ramps, and mapping them to semantic UI roles so that my design tokens stay organized and accessible.
 
 **Acceptance Criteria**:
 
-- [ ] Users can add a new task card with title & description
-- [ ] Each user can add their own comment (stored per user)
-- [ ] Task can be assigned (shared state) and show assignee avatar
-- [ ] Progress ring reflects % of subtasks complete
-- [ ] Undo only affects the acting user's per-user updates
+- [ ] Create/edit color primitives with HEX and LCH inputs
+- [ ] Generate 11-step ramps (050-950) using configurable LCH interpolation methods
+- [ ] Map semantic tokens (background, surface, text, border, accent) to ramp steps
+- [ ] Display WCAG contrast ratios for accessibility validation
+- [ ] Bind tokens to Figma variables for design-to-code handoff
+- [ ] Light/dark mode preview for all tokens
 
 **Technical Requirements**:
 
-- State management: useSyncedState (shared: title, assignee, subtasks); useSyncedMap (per-user: comments, personal status)
-- Components needed: `TaskCard`, `ProgressRing`, `UserAvatarGroup`, `CommentBadge`
-- API calls: None (initial phase)
+- State management: useSyncedState (shared: primitives, ramps, semantic mappings)
+- Components needed: `ColorPrimitiveEditor`, `RampGenerator`, `SemanticTokenMapper`, `ContrastChecker`, `VariableBindingPanel`
+- API calls: None (local variable binding via Plugin API)
+- Math libraries: LCH/OKLCH color space interpolation
 
 **Design Considerations**:
 
-- Performance impact: Low (limited nodes, simple layout)
-- Multiplayer support: Yes
-- Mobile compatibility: Yes (tap-friendly hit areas)
+- Performance impact: Medium (color calculations, real-time preview updates)
+- Multiplayer support: Yes (shared token library)
+- Mobile compatibility: Partial (complex editors better suited for desktop)
 
 ---
 
-### 2. Real-Time Voting / Polls
+### 2. Typography System
 
 **Status**: ⚪ Not Started
 **Priority**: High
 **Target**: Phase 2
 
 **Description**:
-Create quick polls (e.g., choose a direction/style). Each user can cast one vote; aggregated results update live with animated bars.
+Complete typographic token management covering font families, type scales (mathematical size/line-height generation), text styles (weight, tracking, case), and semantic variable mapping. Supports fallback stacks, accessibility-locked line heights, and preview rendering.
 
 **User Story**:
 
-> As a team member, I want to create a poll so that the team can quickly decide between design options without leaving the canvas.
+> As a design systems designer, I want to define font families, generate consistent type scales, create reusable text styles, and map them to semantic tokens so that typography remains consistent across all designs.
 
 **Acceptance Criteria**:
 
-- [ ] User can create a poll with 2-5 options
-- [ ] Each user can vote once and change their vote (last vote counts)
-- [ ] Live tally updates for all users within 250ms
-- [ ] Animated bar chart reflects percentages
-- [ ] Handles ≥20 concurrent users without noticeable lag
+- [ ] Manage font families with fallback stacks and weight previews (100-900)
+- [ ] Generate type scales using base size + ratio (1.2, 1.25, 1.333, etc.)
+- [ ] Create/edit text styles with font, weight, size, line-height, tracking, case
+- [ ] Map semantic tokens (label.sm, body.md, title.lg) to text styles
+- [ ] Live preview of all text styles with sample content
+- [ ] Bind to Figma text styles and variables
 
 **Technical Requirements**:
 
-- State management: useSyncedState (poll meta: question, options); useSyncedMap (votes keyed by sessionId)
-- Components needed: `PollContainer`, `OptionRow`, `VoteBar`, `ResultsSummary`
-- API calls: None (local only)
+- State management: useSyncedState (shared: families, scales, styles, semantic mappings)
+- Components needed: `FontFamilyManager`, `TypeScaleGenerator`, `TextStyleEditor`, `SemanticTypeMapper`, `TypePreview`
+- API calls: Plugin API for text style creation/binding
+- Calculations: Mathematical scale generation, accessibility line-height ratios
 
 **Design Considerations**:
 
-- Performance impact: Medium (frequent updates during voting window)
-- Multiplayer support: Yes
-- Mobile compatibility: Yes (large tap targets)
+- Performance impact: Low (mostly data display, minimal calculations)
+- Multiplayer support: Yes (shared type system)
+- Mobile compatibility: Partial (complex form inputs)
 
 ---
 
-### 3. Inspiration Mood Board (Image Pins)
+### 3. Sizing & Spacing System
 
 **Status**: ⚪ Not Started
 **Priority**: Medium
 **Target**: Phase 3
 
 **Description**:
-Users pin external reference images (URLs) or drag existing Figma images into a board area. Supports lightweight tagging & per-user favorites.
+Comprehensive spatial token management covering spacing scales (consistent intervals), dimensions (component heights/widths), corner radii, and stroke widths. Supports base-unit systems (4px/8px), linear/geometric progressions, and visual preview rulers.
 
 **User Story**:
 
-> As a product designer, I want to collect inspiration images in a shared space so that the team sees a unified visual direction.
+> As a design systems designer, I want to define spacing scales, component dimensions, corner radii, and stroke widths in a structured way so that spatial consistency is maintained across all components.
 
 **Acceptance Criteria**:
 
-- [ ] Add image via URL (validation + error feedback)
-- [ ] Drag existing Figma image node into board to create a pin
-- [ ] Per-user favorite (star) stored separately
-- [ ] Tag list (shared) with add/remove
-- [ ] Grid auto-wrap layout with hover enlarge preview
+- [ ] Create spacing scales with configurable base unit (4px/8px) and progression pattern
+- [ ] Define component-specific dimensions (input.height, button.height, avatar sizes)
+- [ ] Manage corner radius primitives (xs, sm, md, lg, xl, full)
+- [ ] Define stroke width primitives for borders and outlines
+- [ ] Visual preview rulers showing all spacing/sizing values side-by-side
+- [ ] Bind to Figma variables for design token export
 
 **Technical Requirements**:
 
-- State management: useSyncedState (shared: pin metadata, tags); useSyncedMap (per-user: favorites)
-- Components needed: `MoodBoardGrid`, `ImagePin`, `TagList`, `FavoriteStar`
-- API calls: Requires external image fetching -> manifest domain allowlist update (Phase 3)
+- State management: useSyncedState (shared: spacing scales, dimensions, radii, strokes)
+- Components needed: `SpacingScaleGenerator`, `DimensionEditor`, `RadiusEditor`, `StrokeEditor`, `SizingPreview`
+- API calls: Plugin API for variable binding
+- Calculations: Linear/geometric progression algorithms
 
 **Design Considerations**:
 
-- Performance impact: Medium/High (multiple images; need size constraints & lazy load strategy)
-- Multiplayer support: Yes
-- Mobile compatibility: Partial (image grid scroll)
+- Performance impact: Low (minimal computation, static previews)
+- Multiplayer support: Yes (shared sizing system)
+- Mobile compatibility: Yes (simpler UI than color/type)
 
 ---
 
@@ -117,16 +123,17 @@ Users pin external reference images (URLs) or drag existing Figma images into a 
 
 Features critical for MVP functionality:
 
-- [ ] Collaborative Task Cards
-- [ ] Real-Time Voting / Polls
+- [ ] Color Management System
+- [ ] Typography System
 - [ ] Basic error handling
-- [ ] Multi-user support
+- [ ] Multi-user token library support
 
 ### Should Have (Phase 3)
 
 Important features that enhance usability:
 
-- [ ] Inspiration Mood Board
+- [ ] Sizing & Spacing System
+- [ ] Export/import token JSON
 - [ ] Hover states and visual feedback
 - [ ] Property menu actions
 - [ ] Keyboard shortcuts
@@ -135,17 +142,18 @@ Important features that enhance usability:
 
 Nice-to-have features for future releases:
 
-- [ ] Advanced customization
-- [ ] Export/import
-- [ ] Integration with external tools
-- [ ] Analytics dashboard
+- [ ] Theme preset library
+- [ ] Token version history
+- [ ] Integration with token build tools (Style Dictionary, Theo)
+- [ ] Usage analytics dashboard
 
 ### Won't Have (Current Scope)
 
 Features explicitly out of scope:
 
-- ❌ [Feature to exclude]
-- ❌ [Feature to exclude]
+- ❌ Component library management (separate from tokens)
+- ❌ Real-time collaboration chat
+- ❌ Asset/icon management
 
 ---
 
@@ -210,7 +218,7 @@ Features explicitly out of scope:
 
 ### Network Requests
 
-**Enabled**: [ ] Yes [x] No (will switch to Yes for Mood Board in Phase 3)
+**Enabled**: [ ] Yes [x] No (all token operations are local; future phases may add export integrations)
 
 If enabled:
 
@@ -223,31 +231,38 @@ If enabled:
 
 **Features using Plugin API**:
 
-- [ ] Node creation/modification
-- [ ] Page access
-- [ ] Selection handling
-- [ ] Other: [specify]
+- [x] Variable creation and binding (colors, typography, sizing)
+- [x] Text style creation (typography system)
+- [ ] Page access (if needed for cross-page token application)
+- [ ] Selection handling (future: apply tokens to selected nodes)
 
-**Undo Handling**: Use `figma.commitUndo()` for Plugin API changes
+**Undo Handling**: Use `figma.commitUndo()` for Plugin API changes (variable/style creation)
 
 ---
 
 ## Feature Dependencies
 
 ```
-Feature 1
-  ├── Component A
-  ├── Component B
-  └── Utility X
+Color Management System (Phase 2)
+  ├── ColorPrimitiveEditor
+  ├── RampGenerator (LCH interpolation utils)
+  ├── SemanticTokenMapper
+  ├── ContrastChecker (WCAG utils)
+  └── VariableBindingPanel (Plugin API)
 
-Feature 2
-  ├── Component C
-  ├── Utility Y
-  └── Depends on: Feature 1
+Typography System (Phase 2)
+  ├── FontFamilyManager
+  ├── TypeScaleGenerator (math utils)
+  ├── TextStyleEditor
+  ├── SemanticTypeMapper
+  └── Depends on: Plugin API for text style binding
 
-Feature 3
-  ├── Component D
-  └── Depends on: Feature 1, Feature 2
+Sizing & Spacing System (Phase 3)
+  ├── SpacingScaleGenerator
+  ├── DimensionEditor
+  ├── RadiusEditor
+  ├── StrokeEditor
+  └── Depends on: Variable binding infrastructure from Phase 2
 ```
 
 ---
@@ -269,9 +284,11 @@ Each feature must pass:
 
 **Brainstorm** - Not committed:
 
-- Idea 1: [description]
-- Idea 2: [description]
-- Idea 3: [description]
+- Token diffing (compare versions, track changes over time)
+- Preset theme packages (Material, Tailwind-inspired, etc.)
+- Advanced color science tools (APCAcontrast, color blindness simulation)
+- Animation/motion token management
+- Token usage analytics (which tokens are applied where)
 
 **User Requests** - Track in separate issue tracker
 
