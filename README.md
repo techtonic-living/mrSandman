@@ -56,6 +56,7 @@ mrSandman is a **Figma widget for design system token management**. It provides 
 ### Installation
 
 1. **Install dependencies:**
+
    ```bash
    npm install
    ```
@@ -68,9 +69,11 @@ mrSandman is a **Figma widget for design system token management**. It provides 
 ### Running in Figma
 
 1. **Start the development watch server:**
+
    ```bash
    npm run watch
    ```
+
    Or use VS Code: `Terminal > Run Build Task... > npm: watch`
 
 2. **Import widget in Figma:**
@@ -170,6 +173,7 @@ npm run build:prod
 ### Reset Widget State
 
 If you need to reset widget state during testing:
+
 - Right-click widget → `Widgets` → `Reset widget state`
 
 ---
