@@ -1,2 +1,7 @@
 # Ignore deprecated duplicate file causing tsconfig project mismatch
 widget-src/components/index.tsx
+
+# Ignore build config files
+vite.config.ts
+tailwind.config.js
+postcss.config.js

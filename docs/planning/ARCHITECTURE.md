@@ -29,9 +29,10 @@
 │  │            │                       │  │
 │  │            ▼                       │  │
 │  │  ┌─────────────────────────────┐  │  │
-│  │  │  Optional UI (ui.html)      │  │  │
-│  │  │  - Modal/iframe interface   │  │  │
-│  │  │  - Advanced settings        │  │  │
+│  │  │  Optional UI (ui-src)       │  │  │
+│  │  │  - React + Vite             │  │  │
+│  │  │  - Tailwind CSS             │  │  │
+│  │  │  - shadcn/ui components     │  │  │
 │  │  └─────────────────────────────┘  │  │
 │  └───────────────────────────────────┘  │
 └─────────────────────────────────────────┘
@@ -48,6 +49,7 @@
 ## Core Components
 
 ### Widget Entry Point
+
 **File**: `widget-src/code.tsx`
 
 ```tsx
@@ -55,44 +57,68 @@ const { widget } = figma;
 const { AutoLayout, Text, useSyncedState } = widget;
 
 function Widget() {
-  // Component logic
-  return (
-    <AutoLayout>
-      {/* UI structure */}
-    </AutoLayout>
-  );
+	// Component logic
+	return <AutoLayout>{/* UI structure */}</AutoLayout>;
 }
 
 widget.register(Widget);
 ```
 
 **Responsibilities**:
+
 - Main widget rendering
 - Event handler registration
 - State initialization
 - Component composition
+- Launching the UI iframe
+
+### UI Entry Point
+
+**File**: `ui-src/main.tsx`
+
+```tsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./globals.css";
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+	<React.StrictMode>
+		<App />
+	</React.StrictMode>
+);
+```
+
+**Responsibilities**:
+
+- Rendering the React application
+- Handling UI interactions
+- Communicating with the Widget via `parent.postMessage`
 
 ---
 
 ### State Architecture
 
 #### Global Shared State
+
 **Use Case**: Configuration, settings, theme
 **Implementation**: `useSyncedState`
 
 ```tsx
 const [config, setConfig] = useSyncedState("config", {
-  theme: "light",
-  mode: "default"
+	theme: "light",
+	mode: "default",
 });
 ```
 
 **Characteristics**:
+
 - Single source of truth for all users
 - Undo affects all users
 - Suitable for widget-wide settings
 
 #### User-Specific State
+
 **Use Case**: Votes, selections, user data
 **Implementation**: `useSyncedMap`
 
@@ -103,6 +129,7 @@ userDataMap.set(sessionId, { vote: "yes" });
 ```
 
 **Characteristics**:
+
 - Per-user data storage
 - Undo only affects current user
 - Prevents user interference
@@ -130,10 +157,31 @@ widget-src/
 ```
 
 **Design Principles**:
+
 - **Modularity**: Small, focused components
 - **Reusability**: Common patterns extracted
 - **Type Safety**: Comprehensive TypeScript types
 - **Separation**: Logic separated from presentation
+
+---
+
+### UI Architecture
+
+The UI is built as a standard Single Page Application (SPA) using React, bundled by Vite into a single HTML file (`dist/index.html`) that is loaded by the Figma Widget API.
+
+**Tech Stack**:
+
+- **Framework**: React 19
+- **Bundler**: Vite (with `vite-plugin-singlefile`)
+- **Styling**: Tailwind CSS v4
+- **Components**: shadcn/ui (Radix UI primitives)
+- **Icons**: Lucide React
+
+**Communication Pattern**:
+
+1. **Widget -> UI**: `figma.showUI(__html__, { ... })` opens the UI. Data can be passed via `figma.ui.postMessage()`.
+2. **UI -> Widget**: `parent.postMessage({ pluginMessage: { type: '...', payload: ... } }, '*')` sends data back to the widget.
+3. **Widget Listener**: `figma.ui.onmessage` handles incoming messages from the UI.
 
 ---
 
@@ -196,6 +244,7 @@ setTheme("dark");
 ```
 
 **When to Use**:
+
 - Widget appearance settings
 - Display modes
 - Shared configuration
@@ -212,6 +261,7 @@ votes.set(sessionId, "yes");
 ```
 
 **When to Use**:
+
 - User votes/likes
 - Individual selections
 - User presence
@@ -223,11 +273,12 @@ votes.set(sessionId, "yes");
 const votes = useSyncedMap("votes");
 let yesCount = 0;
 for (const vote of votes.values()) {
-  if (vote === "yes") yesCount++;
+	if (vote === "yes") yesCount++;
 }
 ```
 
 **When to Use**:
+
 - Displaying totals
 - Statistics
 - Combined views
@@ -239,12 +290,14 @@ for (const vote of votes.values()) {
 ### Rendering Optimization
 
 **Avoid**:
+
 - ❌ Excessive blurs and shadows
 - ❌ Non-standard blend modes
 - ❌ Complex SVG with many paths
 - ❌ Large clickable areas
 
 **Prefer**:
+
 - ✅ Rasterized images for effects
 - ✅ `normal` or `passthrough` blend modes
 - ✅ Simple SVGs or PNG images
@@ -275,7 +328,7 @@ onClick(() => {
 
 ```json
 {
-  "documentAccess": "dynamic-page"
+	"documentAccess": "dynamic-page"
 }
 ```
 
@@ -288,20 +341,22 @@ onClick(() => {
 ### Levels of Error Handling
 
 1. **Input Validation** (Preventive)
+
    ```tsx
    if (!input || input.length === 0) {
-     figma.notify("Input required");
-     return;
+   	figma.notify("Input required");
+   	return;
    }
    ```
 
 2. **Try-Catch** (Defensive)
+
    ```tsx
    try {
-     await asyncOperation();
+   	await asyncOperation();
    } catch (error) {
-     figma.notify("Operation failed");
-     console.error(error);
+   	figma.notify("Operation failed");
+   	console.error(error);
    }
    ```
 
@@ -324,18 +379,21 @@ onClick(() => {
 ## Security Considerations
 
 ### Network Access
+
 - Minimize network calls
 - Use allowlist in manifest
 - Validate all external data
 - Handle CORS properly
 
 ### State Security
+
 - Validate all user input
 - Sanitize data before storage
 - Don't trust client data
 - Use type validation
 
 ### User Privacy
+
 - Don't store sensitive data
 - Use sessionId, not user details
 - Clear data when appropriate
@@ -347,6 +405,8 @@ onClick(() => {
 
 ### Build Process
 
+**Widget**:
+
 ```
 TypeScript (.tsx)
     │
@@ -355,9 +415,18 @@ esbuild (transpile + bundle)
     │
     ▼
 JavaScript (dist/code.js)
+```
+
+**UI**:
+
+```
+React Source (ui-src/)
     │
     ▼
-Load in Figma
+Vite (bundle + inline)
+    │
+    ▼
+HTML (dist/index.html)
 ```
 
 ### Development Workflow
@@ -374,6 +443,7 @@ Load in Figma
 ## Technology Stack
 
 ### Core Technologies
+
 - **TypeScript** 5.3.2 - Type safety
 - **Figma Widget API** 1.0.0 - Widget framework
 - **esbuild** - Fast bundler
@@ -381,6 +451,7 @@ Load in Figma
 - **Prettier** - Code formatting
 
 ### Development Tools
+
 - **VS Code** - Recommended editor
 - **Git** - Version control
 - **npm** - Package management
@@ -404,16 +475,19 @@ Load in Figma
 ## Scalability Considerations
 
 ### State Scaling
+
 - Monitor map sizes
 - Implement cleanup for old data
 - Consider pagination for large lists
 
 ### Performance Scaling
+
 - Profile with many users
 - Test with large datasets
 - Optimize rendering paths
 
 ### Feature Scaling
+
 - Keep components modular
 - Document component APIs
 - Maintain separation of concerns
@@ -423,6 +497,7 @@ Load in Figma
 ## Future Architecture
 
 ### Potential Enhancements
+
 - Component library extraction
 - Shared utility package
 - Automated testing framework

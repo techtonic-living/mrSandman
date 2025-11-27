@@ -58,8 +58,8 @@ Or in VS Code: `Terminal > Run Build Task... > npm: watch`
 | File                     | Purpose                             |
 | ------------------------ | ----------------------------------- |
 | `widget-src/code.tsx`    | Main widget code - start here!      |
+| `ui-src/`                | React UI source code                |
 | `manifest.json`          | Widget settings (name, permissions) |
-| `ui.html`                | Optional modal UI                   |
 | `widget-src/components/` | Reusable components                 |
 | `widget-src/utils/`      | Helper functions                    |
 | `widget-src/types/`      | TypeScript types                    |
@@ -70,11 +70,11 @@ Or in VS Code: `Terminal > Run Build Task... > npm: watch`
 
 ```bash
 # Development
-npm run watch          # Auto-rebuild (use this!)
+npm run watch          # Auto-rebuild Widget & UI (use this!)
 npm run dev           # Same as watch
 
 # Building
-npm run build         # One-time build
+npm run build         # One-time build (Widget + UI)
 npm run build:prod    # Production build with checks
 
 # Code Quality

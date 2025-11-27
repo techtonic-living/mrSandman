@@ -15,8 +15,8 @@ This is a **Figma widget** (not a plugin) that renders interactive UI components
 ### Key Architecture
 
 - **Widget Code**: `widget-src/code.tsx` - Main widget logic using React-like JSX
-- **UI Iframe**: `ui.html` - Optional modal UI that opens on click
-- **Build Output**: `dist/code.js` - Bundled JavaScript from TypeScript source
+- **UI Source**: `ui-src/` - React + Vite application for the iframe UI
+- **Build Output**: `dist/code.js` (Widget) and `dist/index.html` (UI)
 - **Manifest**: `manifest.json` - Widget configuration and permissions
 
 ## Critical Build & Development Workflow
@@ -35,7 +35,8 @@ npm run tsc                    # Type check without emitting files
 
 ### Build Chain
 
-TypeScript (`.tsx`) → **esbuild** → JavaScript (`dist/code.js`)
+- **Widget**: TypeScript (`widget-src/`) → **esbuild** → JavaScript (`dist/code.js`)
+- **UI**: React (`ui-src/`) → **Vite** → Single HTML File (`dist/index.html`)
 
 **Important**: Always run `npm run watch` in VS Code via "Terminal > Run Build Task..." after opening the project. This must be done each time you reopen VS Code.
 
@@ -146,7 +147,7 @@ onClick={async () => {
 
 // Promise handler (keeps iframe open)
 onClick={() => new Promise((resolve) => {
-  figma.showUI(__html__)  // __html__ is the bundled ui.html content
+  figma.showUI(__html__)  // __html__ is the bundled dist/index.html content
 })}
 ```
 
@@ -193,7 +194,7 @@ useEffect(() => {
 	};
 });
 
-// UI side (ui.html)
+// UI side (ui-src)
 parent.postMessage({ pluginMessage: { type: "data", value: "hello" } }, "*");
 ```
 
@@ -354,7 +355,7 @@ Figma uses RGB/RGBA natively. For LCH/OKLCH operations required by the Workbench
 	"widgetApi": "1.0.0", // Widget API version
 	"documentAccess": "dynamic-page", // Load pages on-demand (performance!)
 	"editorType": ["figma"], // Or ["figjam"] for FigJam boards, or both: ["figma", "figjam"]
-	"ui": "ui.html", // Optional iframe UI
+	"ui": "dist/index.html", // Bundled UI file
 	"networkAccess": {
 		"allowedDomains": ["none"], // Domain allowlist for network requests
 		"reasoning": "", // Required if using "*" or dev servers
@@ -438,8 +439,8 @@ onClick={async () => {
 
 ```
 widget-src/code.tsx    → Main widget component (JSX + TypeScript)
-ui.html                → Iframe modal (vanilla HTML/JS, no bundling)
-dist/code.js           → Build output (git-ignored, generated)
+ui-src/                → React UI source code (Vite project)
+dist/                  → Build output (code.js + index.html)
 manifest.json          → Widget metadata and permissions
 ```
 
@@ -548,3 +549,32 @@ Use the `.github/prompts/add-devdoc.prompt.md` workflow to create new documentat
 - Code examples with language tags
 - Important callouts with ⚠️ format
 - Community links and feedback footer
+
+### Evergreen Documentation
+
+The following files are considered "Evergreen" and must be kept up-to-date with any architectural, structural, or workflow changes. **Do not** modify files in `docs/devdocs/` as they are static reference material.
+
+**Project Root**:
+
+- `README.md` - Main entry point and overview
+- `QUICKSTART.md` - Setup and daily workflow guide
+- `WORKSPACE_SETUP.md` - Environment configuration status
+- `.github/copilot-instructions.md` - This file (AI behavior rules)
+
+**Planning & Architecture**:
+
+- `docs/planning/ARCHITECTURE.md` - Technical design and patterns
+- `docs/planning/FEATURES.md` - Feature specifications
+- `docs/planning/ROADMAP.md` - Development phases and status
+- `docs/testing/TEST_PLAN.md` - Testing strategy and cases
+
+**Maintenance Rule**: When making significant changes to the codebase (e.g., changing build tools, moving directories, updating dependencies), always check and update these files to ensure they remain accurate.
+
+## Safety & Archiving Protocol
+
+**Destructive Changes**:
+
+- Always avoid destructive changes where possible.
+- For significant deletions or overwriting large code blocks, **YOU MUST** first archive the original file(s).
+- **Archive Path**: `archive/YYYY-MM-DD_HHMM/<filename>`
+- Example: Before deleting `ui.html`, copy it to `archive/2025-11-26_1430/ui.html`.

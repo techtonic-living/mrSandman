@@ -69,7 +69,7 @@ export function Tabs({
 				<AutoLayout
 					key={tab.id}
 					padding={{ horizontal: 16, vertical: 12 }}
-					fill={activeTab === tab.id ? "#FFFFFF" : "transparent"}
+					fill={activeTab === tab.id ? "#FFFFFF" : undefined}
 					onClick={() => onTabChange(tab.id)}
 					width="fill-parent"
 					horizontalAlignItems="center"

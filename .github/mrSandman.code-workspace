@@ -3,6 +3,15 @@
 		{
 			"path": "..",
 		},
+		{
+			"path": "../../foundations-workbench",
+		},
+		{
+			"path": "../../archive",
+		},
+		{
+			"path": "../../workbench-component",
+		},
 	],
 	"settings": {
 		"typescript.tsdk": "node_modules/typescript/lib",

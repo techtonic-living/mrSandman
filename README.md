@@ -21,7 +21,7 @@
 
 ---
 
-## 🎯 Overview
+## Overview
 
 mrSandman is a **Figma widget for design system token management**. It provides a visual workbench for creating, editing, and organizing design primitives across three core domains: **Colors**, **Typography**, and **Sizing**.
 
@@ -36,7 +36,7 @@ mrSandman is a **Figma widget for design system token management**. It provides 
 
 ---
 
-## ✨ Features
+## Features
 
 - [ ] **Color Management** - Primitives, LCH ramps, semantic tokens, WCAG contrast validation
 - [ ] **Typography System** - Font families, type scales, text styles, semantic mapping
@@ -44,7 +44,7 @@ mrSandman is a **Figma widget for design system token management**. It provides 
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -61,7 +61,7 @@ mrSandman is a **Figma widget for design system token management**. It provides 
    npm install
    ```
 
-2. **Build the widget:**
+2. **Build the project (Widget + UI):**
    ```bash
    npm run build
    ```
@@ -73,6 +73,8 @@ mrSandman is a **Figma widget for design system token management**. It provides 
    ```bash
    npm run watch
    ```
+
+   This will start both the Widget build (esbuild) and the UI build (Vite) in watch mode.
 
    Or use VS Code: `Terminal > Run Build Task... > npm: watch`
 
@@ -89,31 +91,62 @@ mrSandman is a **Figma widget for design system token management**. It provides 
 
 ---
 
-## 💻 Development
+## Development
 
 ### Development Workflow
 
 ```bash
-# Start development mode (watch + auto-rebuild)
+# Start development mode (watch + auto-rebuild for Widget & UI)
 npm run dev
 
 # Type check (without building)
-npm run type-check
+npm run tsc
 
 # Lint code
 npm run lint
 
+# Build for production
+npm run build:prod
+```
+
+### Project Structure
+
+```
+mrSandman/
+├── widget-src/           # Widget logic (runs on canvas)
+│   ├── code.tsx          # Main entry point
+│   └── components/       # Widget-specific components
+├── ui-src/               # React UI (runs in iframe)
+│   ├── main.tsx          # UI entry point
+│   ├── App.tsx           # Main UI component
+│   └── components/       # React components (shadcn/ui)
+├── dist/                 # Build output
+│   ├── code.js           # Bundled widget code
+│   └── index.html        # Bundled UI (single file)
+├── manifest.json         # Widget configuration
+└── package.json          # Dependencies and scripts
+```
+
+# Lint code
+
+npm run lint
+
 # Fix linting issues
+
 npm run lint:fix
 
 # Format code with Prettier
+
 npm run format
 
 # Validate everything (lint + type-check)
+
 npm run validate
 
 # Production build
+
 npm run build:prod
+
 ```
 
 ### Project Commands
@@ -148,7 +181,7 @@ npm run build:prod
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ### Manual Testing in Figma
 
@@ -178,7 +211,7 @@ If you need to reset widget state during testing:
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 ### Project Documentation
 
@@ -213,59 +246,62 @@ The `/docs/devdocs/figma/widget-api/` directory contains 20+ comprehensive guide
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
+
 mrSandman/
 ├── .github/
-│   ├── copilot-instructions.md   # AI agent development guide
-│   ├── prompts/
-│   │   └── add-devdoc.prompt.md  # Documentation workflow
-│   └── templates/
-│       └── devdoc_TEMPLATE.md    # Doc template
+│ ├── copilot-instructions.md # AI agent development guide
+│ ├── prompts/
+│ │ └── add-devdoc.prompt.md # Documentation workflow
+│ └── templates/
+│ └── devdoc_TEMPLATE.md # Doc template
 │
-├── assets/                        # Images, icons, resources
-│   └── logo/
+├── assets/ # Images, icons, resources
+│ └── logo/
 │
 ├── docs/
-│   ├── devdocs/
-│   │   └── figma/
-│   │       └── widget-api/       # 20+ API reference docs
-│   ├── planning/                 # Planning documents
-│   │   ├── ROADMAP.md
-│   │   ├── FEATURES.md
-│   │   └── ARCHITECTURE.md
-│   └── testing/                  # Test plans & results
-│       └── TEST_PLAN.md
+│ ├── devdocs/
+│ │ └── figma/
+│ │ └── widget-api/ # 20+ API reference docs
+│ ├── planning/ # Planning documents
+│ │ ├── ROADMAP.md
+│ │ ├── FEATURES.md
+│ │ └── ARCHITECTURE.md
+│ └── testing/ # Test plans & results
+│ └── TEST_PLAN.md
 │
 ├── widget-src/
-│   ├── code.tsx                  # Main widget code
-│   ├── tsconfig.json             # TypeScript config
-│   ├── components/               # Reusable components
-│   ├── utils/                    # Helper functions
-│   └── types/                    # Type definitions
+│ ├── code.tsx # Main widget code
+│ ├── tsconfig.json # TypeScript config
+│ ├── components/ # Reusable components
+│ ├── utils/ # Helper functions
+│ └── types/ # Type definitions
 │
 ├── dist/
-│   └── code.js                   # Compiled output (git-ignored)
+│ ├── code.js # Compiled output (git-ignored)
+│ └── index.html # Compiled UI
 │
-├── ui.html                       # Optional iframe UI
-├── manifest.json                 # Widget configuration
-├── package.json                  # Dependencies & scripts
-├── .gitignore                    # Git ignore rules
-├── .prettierrc                   # Prettier config
-└── README.md                     # This file
-```
+├── ui-src/ # React UI Source
+├── manifest.json # Widget configuration
+├── package.json # Dependencies & scripts
+├── .gitignore # Git ignore rules
+├── .prettierrc # Prettier config
+└── README.md # This file
+
+````
 
 ### Key Files
 
 - **`widget-src/code.tsx`** - Main widget component (your code here!)
 - **`manifest.json`** - Widget metadata and permissions
-- **`ui.html`** - Optional modal UI (if needed)
+- **`ui-src/`** - React UI source code (Vite project)
 - **`dist/code.js`** - Compiled JavaScript (auto-generated)
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 ### Development Process
 
@@ -292,11 +328,11 @@ refactor: Simplify component structure
 perf: Optimize rendering performance
 test: Add test scenarios
 chore: Update dependencies
-```
+````
 
 ---
 
-## 📖 Resources
+## Resources
 
 ### Figma Widget Development
 
